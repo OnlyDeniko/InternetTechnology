@@ -2,12 +2,9 @@ const http = require("http");
 var express = require("express");
 var app = express();
 var fs = require('fs');
-var obj;
-fs.readFile('questions.json', 'utf8', function (err, data) {
-if (err) throw err;
-    obj = JSON.parse(data);
-});
 
+let fileContent = fs.readFileSync("questions.json", "utf8");
+let obj = JSON.parse(fileContent);
 let forms = ""
 
 function generateSection(elemet) {
@@ -20,13 +17,13 @@ function generateSection(elemet) {
 }
 
 obj.forEach(element => {
-   forms += generateSection(elemet); 
+   forms += generateSection(element); 
 });
 
 app.get("", function(req, res){
     res.header('Content-Type','text/html');
     fs.readFile("index.html", "utf8", function(error, data){
-        data = data.replace("{header}", forms);
+        data = data.replace("{forms}", forms);
         res.end(data);
     })
 } );
