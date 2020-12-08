@@ -11,6 +11,8 @@ const urlencodedParser = bodyParser.urlencoded({extended: false});
 let fileContent = fs.readFileSync("questions.json", "utf8");
 let obj = JSON.parse(fileContent);
 let forms = "<form name=\"quiz\"  method=\"post\" class=\"quizform\">"
+forms += "<label>Имя пользователя</label><br>"
+forms += "<input type=\"text\" name=\"userName\" />"
 
 function generateSection(elemet, i) {
     let current = "<div class =\"question\"> <h3>" + elemet["question"] + "</h3>";
@@ -25,13 +27,14 @@ obj.forEach((e, i) => {
    forms += generateSection(e, i); 
 });
 
-forms += "<input type=\"submit\" value=\"Отправить\" /></form>";
+forms += "<input type=\"submit\" value=\"Завершить ответ\" /></form>";
 
-app.post("/test", urlencodedParser, function(req, res){
+app.post("/", urlencodedParser, function(req, res){
     if (!req.body) return express.sendStatus(400);
     let correct = true
     var userAns = []
     var trueAns = []
+    const textInsert = 'INSERT INTO quiz(username, question, answer) VALUES($1, $2, $3) RETURNING *'
     for (let i = 0; i < obj.length; ++i) {
         var tmp = []
         obj[i]["answers"].forEach(e => {
@@ -48,11 +51,28 @@ app.post("/test", urlencodedParser, function(req, res){
             tmp = req.body["q" + i]
         }
         userAns.push(tmp);
+        // QUERY TO DB
+        values = [req.body.userName, obj[i]["question"], tmp]
+        connection.query(textInsert, values, (err, res) => {
+            if (err) {
+                console.log(err.stack)
+            } else {
+                console.log(res.rows)
+            }
+        })
     }
-    var result = [];
     for (let i = 0; i < userAns.length; i++) {
-        if (userAns[i].join() != trueAns[i].join()){
+        if (userAns[i].length != trueAns[i].length) {
             correct = false;
+            break;
+        }
+        for (let j = 0; j < userAns[i].length; j++) {
+            if (userAns[i][j] != trueAns[i][j]) {
+                correct = false;
+                break;
+            }
+        }
+        if (!correct){
             break;
         }
     }
@@ -61,21 +81,9 @@ app.post("/test", urlencodedParser, function(req, res){
     } else {
         res.send("<h1> Всё в говне!!! </h1>")
     }
-    for (let i = 0; i < userAns.length; i++) {
-        const text = 'INSERT INTO quiz(username, question, answer) VALUES($1, $2, $3) RETURNING *'
-        const values = ['Denis', obj[i]["question"], userAns[i]]
-        
-        connection.query(text, values, (err, res) => {
-            if (err) {
-                console.log(err.stack)
-            } else {
-                console.log(res.rows)
-            }
-        })
-    }
 });
 
-app.get("/test", urlencodedParser, function(req, res){
+app.get("/", urlencodedParser, function(req, res){
     res.header('Content-Type','text/html');
     fs.readFile("index.html", "utf8", function(error, data){
         data = data.replace("{forms}", forms);
