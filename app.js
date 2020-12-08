@@ -1,9 +1,10 @@
 const http = require("http");
 var express = require("express");
 var app = express();
+var connection = require("./db");
+
 const bodyParser = require("body-parser");
 var fs = require('fs');
-const { response } = require("express");
 
 const urlencodedParser = bodyParser.urlencoded({extended: false});
 
@@ -27,37 +28,32 @@ obj.forEach((e, i) => {
 forms += "<input type=\"submit\" value=\"Отправить\" /></form>";
 
 app.post("/test", urlencodedParser, function(req, res){
-    if (!req.body) return response.sendStatus(400);
+    if (!req.body) return express.sendStatus(400);
     let correct = true
+    var userAns = []
+    var trueAns = []
     for (let i = 0; i < obj.length; ++i) {
-        let answer = []
+        var tmp = []
         obj[i]["answers"].forEach(e => {
             if (e["correct"]) {
-                answer.push(e["answer"]);
+                tmp.push(e["answer"]);
             }
         });
-        let userAns = []
-        if (!req.body["q" + i]) {
-            correct = false;
-            continue;
-        }
+        trueAns.push(tmp)
+
+        tmp = []
         if (typeof req.body["q" + i] !== "object") {
-            userAns.push(req.body["q" + i]);
+            tmp.push(req.body["q" + i])
         } else {
-            userAns = req.body["q" + i];
+            tmp = req.body["q" + i]
         }
-    
-        if (userAns.length != answer.length) {
+        userAns.push(tmp);
+    }
+    var result = [];
+    for (let i = 0; i < userAns.length; i++) {
+        if (userAns[i].join() != trueAns[i].join()){
             correct = false;
-            continue;
-        }
-        userAns.sort();
-        answer.sort();
-        for(let j = 0; j < userAns.length; j++) {
-            if (userAns[j] != answer[j]) {
-                correct = false;
-                break;
-            }
+            break;
         }
     }
     if (correct) {
@@ -73,7 +69,7 @@ app.get("/test", urlencodedParser, function(req, res){
         data = data.replace("{forms}", forms);
         res.end(data);
     })
-} );
+});
 
 
 app.listen(3000);

@@ -68,19 +68,19 @@
         ]
     },
     {
-        "question":"What animal is NOT a mammal?",
+        "question":"What animal is a mammal?",
         "answers":[
             {
                 "answer":"dog",
-                "correct":false
-            },
-            {
-                "answer":"owl",
                 "correct":true
             },
             {
-                "answer":"pig",
+                "answer":"owl",
                 "correct":false
+            },
+            {
+                "answer":"pig",
+                "correct":true
             }
         ]
     }
