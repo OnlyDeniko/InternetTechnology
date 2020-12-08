@@ -2,7 +2,7 @@
 
 Laba
 
-#Installation
+# Installation
 
 First of all it is neccessary to install node.js and PostgreSql database. Create table, call it 'quiz'. Configure db.js file where you should write down User, Host, Database, Password and Port.
 
