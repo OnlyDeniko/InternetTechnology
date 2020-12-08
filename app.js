@@ -15,7 +15,7 @@ forms += "<label>Имя пользователя</label><br>"
 forms += "<input type=\"text\" name=\"userName\" />"
 
 function generateSection(elemet, i) {
-    let current = "<div class =\"question\"> <h3>" + elemet["question"] + "</h3>";
+    let current = "<div class =\"question\"> <li>" + elemet["question"] + "</li>";
     elemet["answers"].forEach(e => {
         current += "<div class=\"answer\"> <input name=\"q"+i+"\" value=\"" + e['answer'] + "\" type=\"checkbox\"/>"+ e["answer"] + "</div>";
     })
@@ -23,9 +23,11 @@ function generateSection(elemet, i) {
     return current;
 }
 
+forms += "<ol>"
 obj.forEach((e, i) => {
-   forms += generateSection(e, i); 
+    forms += generateSection(e, i); 
 });
+forms += "</ol>"
 
 forms += "<input type=\"submit\" value=\"Завершить ответ\" /></form>";
 
