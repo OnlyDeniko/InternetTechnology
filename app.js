@@ -122,9 +122,10 @@ app.get("/", urlencodedParser, function(req, res){
 });
 
 app.post("/results", urlencodedParser, function(req, res) {
-    const textInsert = 'SELECT * FROM quiz WHERE username=\'' + req.body.userName + '\''
-    const values = [req.body.userName]
-
+    let textInsert = 'SELECT * FROM quiz WHERE username=\'' + req.body.userName + '\''
+    if (req.body.userName == "") {
+        textInsert = 'SELECT * FROM quiz'
+    }    
     connection.query(textInsert).then ( ans => {
         ans = ans.rows
         let responseText = "<table border=\"2\"><tr><th>Вопрос</th><th>Ответ</th><th>Дата</th></tr>";
