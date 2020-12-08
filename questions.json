@@ -17,7 +17,7 @@
         ]
     },
     {
-        "question":"How many hours are in a day?",
+        "question":"Сколько часов в сутках?",
         "answers":[
             {
                 "answer":"60",
@@ -34,52 +34,52 @@
         ]
     },
     {
-        "question":"What color is the cucumber?",
+        "question":"Какого цвета огурец?",
         "answers":[
             {
-                "answer":"red",
+                "answer":"Красный",
                 "correct":false
             },
             {
-                "answer":"purple",
+                "answer":"Фиолетовый",
                 "correct":false
             },
             {
-                "answer":"green",
+                "answer":"Зеленый",
                 "correct":true
             }
         ]
     },
     {
-        "question":"What color is NOT in the rainbow?",
+        "question":"Какой цвет НЕ входит в радугу?",
         "answers":[
             {
-                "answer":"purple",
+                "answer":"Фиолетовый",
                 "correct":false
             },
             {
-                "answer":"pink",
+                "answer":"Розовый",
                 "correct":true
             },
             {
-                "answer":"yellow",
+                "answer":"Желтый",
                 "correct":false
             }
         ]
     },
     {
-        "question":"What animal is a mammal?",
+        "question":"Какие из перечисленных животных являются млекопитающими?",
         "answers":[
             {
-                "answer":"dog",
+                "answer":"Собака",
                 "correct":true
             },
             {
-                "answer":"owl",
+                "answer":"Сова",
                 "correct":false
             },
             {
-                "answer":"pig",
+                "answer":"Свинья",
                 "correct":true
             }
         ]
