@@ -61,6 +61,18 @@ app.post("/test", urlencodedParser, function(req, res){
     } else {
         res.send("<h1> Всё в говне!!! </h1>")
     }
+    for (let i = 0; i < userAns.length; i++) {
+        const text = 'INSERT INTO quiz(username, question, answer) VALUES($1, $2, $3) RETURNING *'
+        const values = ['Denis', obj[i]["question"], userAns[i]]
+        
+        connection.query(text, values, (err, res) => {
+            if (err) {
+                console.log(err.stack)
+            } else {
+                console.log(res.rows)
+            }
+        })
+    }
 });
 
 app.get("/test", urlencodedParser, function(req, res){
@@ -70,6 +82,5 @@ app.get("/test", urlencodedParser, function(req, res){
         res.end(data);
     })
 });
-
 
 app.listen(3000);
