@@ -34,9 +34,10 @@ forms += "<input type=\"submit\" value=\"Завершить ответ\" /></for
 app.post("/", urlencodedParser, function(req, res){
     if (!req.body) return express.sendStatus(400);
     let correct = true
-    var userAns = []
-    var trueAns = []
-    const textInsert = 'INSERT INTO quiz(username, question, answer) VALUES($1, $2, $3) RETURNING *'
+    let userAns = []
+    let trueAns = []
+    const textInsert = 'INSERT INTO quiz(username, question, answer, date) VALUES($1, $2, $3, $4) RETURNING *'
+    let now = new Date();
     for (let i = 0; i < obj.length; ++i) {
         var tmp = []
         obj[i]["answers"].forEach(e => {
@@ -54,7 +55,7 @@ app.post("/", urlencodedParser, function(req, res){
         }
         userAns.push(tmp);
         // QUERY TO DB
-        values = [req.body.userName, obj[i]["question"], tmp]
+        values = [req.body.userName, obj[i]["question"], tmp, now]
         connection.query(textInsert, values, (err, res) => {
             if (err) {
                 console.log(err.stack)
@@ -78,11 +79,22 @@ app.post("/", urlencodedParser, function(req, res){
             break;
         }
     }
+    let responseText = "";
     if (correct) {
-        res.send("<h1> Всё правильно!!! </h1>")
+        responseText += "<h1> Всё правильно!!! </h1>";
     } else {
-        res.send("<h1> Всё в говне!!! </h1>")
+        responseText += "<h1> Всё в говне!!! </h1>";
     }
+    responseText += "<table border=\"2\"><tr><th>Вопрос</th><th>Ваш ответ</th><th>Правильный ответ</th></tr>";
+    for (let i = 0; i < userAns.length; i++) {
+        responseText += "<tr>"
+        responseText += "<td>" + obj[i]["question"] + "</td>"
+        responseText += "<td>" + userAns[i].join() + "</td>"
+        responseText += "<td>" + trueAns[i].join() + "</td>"
+        responseText += "</tr>"
+    }
+    responseText += "</table>";
+    res.send(responseText);
 });
 
 app.get("/", urlencodedParser, function(req, res){
