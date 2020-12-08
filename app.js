@@ -1,4 +1,3 @@
-const http = require("http");
 var express = require("express");
 var app = express();
 var connection = require("./db");
