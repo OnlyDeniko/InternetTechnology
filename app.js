@@ -36,7 +36,7 @@ app.post("/", urlencodedParser, function(req, res){
     let correct = true
     let userAns = []
     let trueAns = []
-    const textInsert = 'INSERT INTO quiz(username, question, answer, date) VALUES($1, $2, $3, $4) RETURNING *'
+    const textInsert = 'INSERT INTO quiz(username, question, answer, date) VALUES($1, $2, $3, $4)'
     let now = new Date();
     for (let i = 0; i < obj.length; ++i) {
         var tmp = []
